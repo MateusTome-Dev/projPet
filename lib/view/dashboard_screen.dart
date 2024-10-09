@@ -38,20 +38,20 @@ class HomeScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: size.width * 0.08, // Tamanho ajustado do título
                     fontWeight: FontWeight.bold,
-                    color: Colors.lightBlueAccent,
+                    color: const Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
                 Text(
                   'Adopt, Don\'t Shop',
                   style: TextStyle(
                     fontSize: size.width * 0.05, // Tamanho ajustado do subtítulo
-                    color: Colors.lightBlueAccent,
+                    color: const Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
               ],
             ),
             Image.network(
-              'https://barking.ca/wp-content/uploads/2022/03/barking-dog-480.png', // Substituir pela URL da imagem do cachorro
+              'https://www.pedigree.com.br/cdn-cgi/image/format=auto,q=90/sites/g/files/fnmzdf2401/files/2022-04/hero-icon-Savannah_0.png', // Substituir pela URL da imagem do cachorro
               height: size.height * 0.3, // Ajuste proporcional da imagem
             ),
             Column(

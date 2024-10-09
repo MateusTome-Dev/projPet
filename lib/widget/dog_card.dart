@@ -23,7 +23,7 @@ class DogCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.network(
+          Image.asset(
             imageUrl,
             height: 80,
           ),
@@ -40,7 +40,7 @@ class DogCard extends StatelessWidget {
             dogAge,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.grey,
+              color: const Color.fromARGB(255, 15, 15, 15),
             ),
           ),
         ],

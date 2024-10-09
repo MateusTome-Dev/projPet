@@ -6,16 +6,11 @@ class DogsListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFFF5E8FF), // Cor de fundo suave
+      backgroundColor: Color.fromARGB(255, 255, 255, 255), // Cor de fundo suave
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.black),
-          onPressed: () {
-            // Ação ao clicar no ícone do menu
-          },
-        ),
+        
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0),
@@ -60,30 +55,38 @@ class DogsListScreen extends StatelessWidget {
                   DogCard(
                     dogName: 'Kikiski',
                     dogAge: '3 months',
-                    imageUrl:
-                        'https://example.com/kikiski.png', // Substituir pela URL da imagem do cachorro
+                    imageUrl:'assets/img/doglist1.png',
                     backgroundColor: Colors.blueAccent.shade100,
                   ),
                   DogCard(
                     dogName: 'Ginger',
                     dogAge: '4 months',
-                    imageUrl:
-                        'https://example.com/ginger.png', // Substituir pela URL da imagem do cachorro
+                    imageUrl:'assets/img/doglist1.png',
                     backgroundColor: Colors.yellowAccent.shade100,
                   ),
                   DogCard(
                     dogName: 'Scooby',
                     dogAge: '2 months',
-                    imageUrl:
-                        'https://example.com/scooby.png', // Substituir pela URL da imagem do cachorro
+                    imageUrl:'assets/img/doglist1.png', // Substituir pela URL da imagem do cachorro
                     backgroundColor: Colors.redAccent.shade100,
                   ),
                   DogCard(
                     dogName: 'Jackie',
                     dogAge: '5 months',
-                    imageUrl:
-                        'https://example.com/jackie.png', // Substituir pela URL da imagem do cachorro
+                    imageUrl:'assets/img/doglist1.png', // Substituir pela URL da imagem do cachorro
                     backgroundColor: Colors.greenAccent.shade100,
+                  ),
+                  DogCard(
+                    dogName: 'Kikiski',
+                    dogAge: '3 months',
+                    imageUrl:'assets/img/doglist1.png',
+                    backgroundColor: Colors.yellowAccent.shade100,
+                  ),
+                  DogCard(
+                    dogName: 'Ginger',
+                    dogAge: '4 months',
+                    imageUrl:'assets/img/doglist1.png',
+                    backgroundColor: Colors.blueAccent.shade100,
                   ),
                 ],
               ),
@@ -91,25 +94,7 @@ class DogsListScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF7E57C2),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white54,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+      
     );
   }
 }
