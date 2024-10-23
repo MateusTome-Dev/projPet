@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projpet/view/dog_detail_page.dart';
 
 class DogCard extends StatelessWidget {
   final String dogName;
@@ -15,35 +16,49 @@ class DogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            imageUrl,
-            height: 80,
-          ),
-          SizedBox(height: 8),
-          Text(
-            dogName,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DogDetailPage(
+              dogName: dogName,
+              dogAge: dogAge,
+              imageUrl: imageUrl,
             ),
           ),
-          Text(
-            dogAge,
-            style: TextStyle(
-              fontSize: 16,
-              color: const Color.fromARGB(255, 15, 15, 15),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              imageUrl,
+              height: 80,
             ),
-          ),
-        ],
+            SizedBox(height: 8),
+            Text(
+              dogName,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              dogAge,
+              style: TextStyle(
+                fontSize: 16,
+                color: const Color.fromARGB(255, 15, 15, 15),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

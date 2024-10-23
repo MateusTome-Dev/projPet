@@ -1,32 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:projpet/models/user_model.dart';
+import 'package:projpet/view/dashboard_screen.dart';
+import 'package:projpet/view/doglist_screen.dart';
+ 
 
+List<UserModel> users = [];
+ 
+
+final UserModel fixedUser = UserModel(
+  username: "Admin",
+  email: "teste@gmail.com",
+  password: "teste123",
+);
+ 
 void main() {
   runApp(LoginScreen());
 }
-
+ 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignUpPage(),
+      home: SignInPage(),
     );
   }
 }
+ 
+class SignInPage extends StatefulWidget {
 
-class SignUpPage extends StatelessWidget {
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+ 
+class _SignInPageState extends State<SignInPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String _errorMessage = "";
+ 
+  void _login(BuildContext context) {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+ 
+
+    if (email == fixedUser.email && password == fixedUser.password) {
+      print('Login bem-sucedido: ${fixedUser.username}');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DogsListScreen()),
+      );
+    } else {
+
+      setState(() {
+        _errorMessage = "Credenciais inválidas. Tente novamente.";
+      });
+      print('Credenciais inválidas');
+    }
+  }
+ 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFFF5E8FF), // Cor de fundo suave
+      backgroundColor: Color(0xFFF5E8FF),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            // Ação para voltar
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DashboardScreen()),
+            );
           },
         ),
       ),
@@ -46,14 +93,10 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8),
-              Text(
-                "Sign up by entering email and setting a password",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
               
               SizedBox(height: size.height * 0.02),
-              // Campo Email
               TextField(
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -63,8 +106,8 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              // Campo Senha
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -73,14 +116,19 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: size.height * 0.02),
+              if (_errorMessage.isNotEmpty)
+                Text(
+                  _errorMessage,
+                  style: TextStyle(color: Colors.red),
+                ),
               SizedBox(height: size.height * 0.04),
-              // Botão Sign Up
               Container(
                 width: double.infinity,
                 height: size.height * 0.07,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Ação ao clicar no botão Sign Up
+                    _login(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF7E57C2),
@@ -97,7 +145,6 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ),
               ),
-             
               SizedBox(height: size.height * 0.02),
             ],
           ),

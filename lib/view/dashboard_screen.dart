@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'package:projpet/view/login_screen.dart';
+import 'package:projpet/view/signup_screen.dart';
+ 
 void main() {
   runApp(DashboardScreen());
 }
-
+ 
 class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -13,46 +15,46 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
-
+ 
+// Tela Inicial
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Pegando o tamanho da tela para fazer ajustes responsivos
     final size = MediaQuery.of(context).size;
-
+ 
     return Scaffold(
       body: Container(
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
-          color: Color(0xFF7E57C2), // Cor de fundo roxa
+          color: Color(0xFF7E57C2),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround, // Espaçamento mais compacto
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            SizedBox(height: size.height * 0.1), // Espaço superior
+            SizedBox(height: size.height * 0.1),
             Column(
               children: [
                 Text(
-                  'HOME FOR PAWS',
+                  'AMOR POR QUATRO PATAS',
                   style: TextStyle(
-                    fontSize: size.width * 0.08, // Tamanho ajustado do título
+                    fontSize: size.width * 0.07,
                     fontWeight: FontWeight.bold,
                     color: const Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
                 Text(
-                  'Adopt, Don\'t Shop',
+                  'Adote, Não compre',
                   style: TextStyle(
-                    fontSize: size.width * 0.05, // Tamanho ajustado do subtítulo
+                    fontSize: size.width * 0.05,
                     color: const Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
               ],
             ),
             Image.network(
-              'https://www.pedigree.com.br/cdn-cgi/image/format=auto,q=90/sites/g/files/fnmzdf2401/files/2022-04/hero-icon-Savannah_0.png', // Substituir pela URL da imagem do cachorro
-              height: size.height * 0.3, // Ajuste proporcional da imagem
+              'https://www.pedigree.com.br/cdn-cgi/image/format=auto,q=90/sites/g/files/fnmzdf2401/files/2022-04/hero-icon-Savannah_0.png',
+              height: size.height * 0.3,
             ),
             Column(
               children: [
@@ -60,10 +62,15 @@ class HomeScreen extends StatelessWidget {
                   opacity: 0.8,
                   child: Container(
                     width: size.width * 0.5,
-                    height: size.height * 0.06, // Altura menor para os botões
+                    height: size.height * 0.06,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Ação do botão
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white.withOpacity(0.2),
@@ -72,24 +79,29 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Login',
+                        'Entrar',
                         style: TextStyle(
-                          fontSize: size.width * 0.045, // Tamanho ajustado do texto
+                          fontSize: size.width * 0.045,
                           color: Colors.white,
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 10), // Diminuir o espaçamento entre os botões
+                SizedBox(height: 10),
                 Opacity(
                   opacity: 0.8,
                   child: Container(
                     width: size.width * 0.5,
-                    height: size.height * 0.06, // Altura menor para os botões
+                    height: size.height * 0.06,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Ação do botão
+                        
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpScreen()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white.withOpacity(0.2),
@@ -98,9 +110,9 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Sign-up',
+                        'Cadastre-se',
                         style: TextStyle(
-                          fontSize: size.width * 0.045, // Tamanho ajustado do texto
+                          fontSize: size.width * 0.045,
                           color: Colors.white,
                         ),
                       ),
@@ -109,7 +121,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: size.height * 0.02), // Menor espaço inferior
+            SizedBox(height: size.height * 0.02),
           ],
         ),
       ),

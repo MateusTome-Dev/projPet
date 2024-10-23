@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projpet/view/doglist_screen.dart';
 
 void main() {
   runApp(CreateDogScreen());
@@ -20,17 +21,15 @@ class CreatePetInformation extends StatefulWidget {
 }
 
 class _CreatePetInformationState extends State<CreatePetInformation> {
-  final TextEditingController speciesController = TextEditingController(text: "Dog");
-  final TextEditingController breedController = TextEditingController(text: "American Eskimo");
-  final TextEditingController nameController = TextEditingController(text: "Snowy");
+  final TextEditingController speciesController = TextEditingController();
+  final TextEditingController breedController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   bool isMale = true;
-  bool isLookingForHome = true;
 
   @override
   void initState() {
     super.initState();
-    dateController.text = "27/09/23"; // Data padrão
   }
 
   @override
@@ -44,7 +43,11 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            // Voltar à página anterior
+            Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DogsListScreen()),
+                        );
           },
         ),
       ),
@@ -54,7 +57,7 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
           children: [
             Center(
               child: Text(
-                'Create Pet',
+                'Adicionar Cachorro',
                 style: TextStyle(
                   fontSize: size.width * 0.07,
                   fontWeight: FontWeight.bold,
@@ -63,16 +66,16 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
               ),
             ),
             SizedBox(height: 20),
-            buildTextField("Species", speciesController),
+            buildTextField("Espécie:", speciesController),
             SizedBox(height: 15),
-            buildTextField("Breed", breedController),
+            buildTextField("Raça:", breedController),
             SizedBox(height: 15),
-            buildTextField("Pet’s new name", nameController),
+            buildTextField("Nome:", nameController),
             SizedBox(height: 15),
-            buildDateField(context, "Birthday or Adoption day", dateController),
+            buildDateField(context, "Idade:", dateController),
             SizedBox(height: 15),
             Text(
-              "Gender",
+              "Genero:",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             SizedBox(height: 10),
@@ -88,12 +91,12 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
                 Container(
                   width: size.width * 0.4,
                   padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Center(child: Text("Male")),
+                  child: Center(child: Text("Masculino")),
                 ),
                 Container(
                   width: size.width * 0.4,
                   padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Center(child: Text("Female")),
+                  child: Center(child: Text("Feminino")),
                 ),
               ],
               color: Colors.black,
@@ -101,24 +104,7 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
               fillColor: Color(0xFF7E57C2),
             ),
             SizedBox(height: 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Looking for a home",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Switch(
-                  value: isLookingForHome,
-                  activeColor: Color(0xFF7E57C2),
-                  onChanged: (value) {
-                    setState(() {
-                      isLookingForHome = value;
-                    });
-                  },
-                ),
-              ],
-            ),
+            
           ],
         ),
       ),

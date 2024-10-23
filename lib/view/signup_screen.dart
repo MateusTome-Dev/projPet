@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'package:projpet/view/dashboard_screen.dart';
+import 'package:projpet/models/user_model.dart';
+import 'package:projpet/view/login_screen.dart';
+ 
 void main() {
   runApp(SignUpScreen());
 }
-
+ 
 class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -13,20 +16,54 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
+ 
+class SignUpPage extends StatefulWidget {
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+ 
+class _SignUpPageState extends State<SignUpPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+ 
+  void _signUp() {
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+ 
+    if (username.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
+      UserModel newUser = UserModel(
+        username: username,
+        email: email,
+        password: password,
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+      print('Usuário cadastrado: ${newUser.username}, Email: ${newUser.email}');
 
-class SignUpPage extends StatelessWidget {
+    } else {
+      print('Preencha todos os campos');
+    }
+  }
+ 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFFF5E8FF), // Cor de fundo suave
+      backgroundColor: Color(0xFFF5E8FF),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            // Ação para voltar
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DashboardScreen()),
+            );
           },
         ),
       ),
@@ -46,13 +83,11 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8),
-              Text(
-                "Sign up by entering email and setting a password",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
+              
               SizedBox(height: size.height * 0.04),
-              // Campo Username
+
               TextField(
+                controller: _usernameController,
                 decoration: InputDecoration(
                   labelText: 'Username',
                   border: OutlineInputBorder(
@@ -61,8 +96,9 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              // Campo Email
+
               TextField(
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -72,8 +108,9 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              // Campo Senha
+              
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -83,14 +120,12 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.04),
-              // Botão Sign Up
+
               Container(
                 width: double.infinity,
                 height: size.height * 0.07,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Ação ao clicar no botão Sign Up
-                  },
+                  onPressed: _signUp,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF7E57C2),
                     shape: RoundedRectangleBorder(
@@ -106,7 +141,6 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ),
               ),
-             
               SizedBox(height: size.height * 0.02),
             ],
           ),
