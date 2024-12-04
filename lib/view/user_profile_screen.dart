@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class UserProfileView extends StatelessWidget {
-  final String userName = 'Mateus Tomé';
-  final String email = 'mateustomedossantos@gmail.com';
-  final String hiddenPassword = '************';
+  final String userName = 'Teste';
+  final String email = 'teste@gmail.com';
+  final String hiddenPassword = '******';
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class UserProfileView extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); 
+            Navigator.pop(context);
           },
         ),
       ),
@@ -43,9 +43,7 @@ class UserProfileView extends StatelessWidget {
                     right: 10,
                     child: IconButton(
                       icon: Icon(Icons.camera_alt, color: Colors.purple),
-                      onPressed: () {
-                        
-                      },
+                      onPressed: () {},
                     ),
                   )
                 ],

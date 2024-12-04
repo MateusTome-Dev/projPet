@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:projpet/view/dashboard_screen.dart';
-import 'package:projpet/models/user_model.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:projpet/view/login_screen.dart';
- 
+
 void main() {
   runApp(SignUpScreen());
 }
- 
+
 class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,39 +17,83 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
- 
+
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
- 
+
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
- 
-  void _signUp() {
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  Future<void> _signUp() async {
     String username = _usernameController.text;
     String email = _emailController.text;
+    String phone = _phoneController.text;
     String password = _passwordController.text;
- 
-    if (username.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
-      UserModel newUser = UserModel(
-        username: username,
-        email: email,
-        password: password,
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
-      print('Usuário cadastrado: ${newUser.username}, Email: ${newUser.email}');
+    String confirmPassword = _confirmPasswordController.text;
 
-    } else {
-      print('Preencha todos os campos');
+    if (username.isEmpty ||
+        email.isEmpty ||
+        phone.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Preencha todos os campos')),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('As senhas não coincidem')),
+      );
+      return;
+    }
+
+    try {
+      var url =
+          Uri.parse('https://pet-adopt-dq32j.ondigitalocean.app/user/register');
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": username,
+          "email": email,
+          "phone": phone,
+          "password": password,
+          "confirmpassword": confirmPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data['message'])),
+        );
+        // Redireciona para a tela de login após o cadastro
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+      } else {
+        var errorData = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorData['message'] ?? 'Erro no cadastro')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro de conexão: $e')),
+      );
     }
   }
- 
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -60,10 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => DashboardScreen()),
-            );
+            Navigator.pop(context);
           },
         ),
       ),
@@ -83,20 +125,17 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               SizedBox(height: 8),
-              
               SizedBox(height: size.height * 0.04),
-
               TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
-                  labelText: 'Username',
+                  labelText: 'Nome',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -108,19 +147,39 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              
+              TextField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  labelText: 'Telefone',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: size.height * 0.02),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Senha',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: size.height * 0.02),
+              TextField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Confirme a senha',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
               ),
               SizedBox(height: size.height * 0.04),
-
               Container(
                 width: double.infinity,
                 height: size.height * 0.07,

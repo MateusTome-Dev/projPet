@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projpet/view/login_screen.dart';
 import 'package:projpet/view/signup_screen.dart';
- 
+
 void main() {
   runApp(DashboardScreen());
 }
- 
+
 class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,13 +15,13 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
- 
+
 // Tela Inicial
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
- 
+
     return Scaffold(
       body: Container(
         height: size.height,
@@ -65,7 +65,6 @@ class HomeScreen extends StatelessWidget {
                     height: size.height * 0.06,
                     child: ElevatedButton(
                       onPressed: () {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -96,7 +95,6 @@ class HomeScreen extends StatelessWidget {
                     height: size.height * 0.06,
                     child: ElevatedButton(
                       onPressed: () {
-                        
                         Navigator.push(
                           context,
                           MaterialPageRoute(

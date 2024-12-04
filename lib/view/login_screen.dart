@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:projpet/models/user_model.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projpet/view/dashboard_screen.dart';
 import 'package:projpet/view/doglist_screen.dart';
- 
 
-List<UserModel> users = [];
- 
-
-final UserModel fixedUser = UserModel(
-  username: "Admin",
-  email: "teste@gmail.com",
-  password: "teste123",
-);
- 
 void main() {
   runApp(LoginScreen());
 }
- 
+
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,39 +18,79 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
- 
-class SignInPage extends StatefulWidget {
 
+class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();
 }
- 
+
 class _SignInPageState extends State<SignInPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = "";
- 
-  void _login(BuildContext context) {
-    String email = _emailController.text;
-    String password = _passwordController.text;
- 
+  String? _authToken;
 
-    if (email == fixedUser.email && password == fixedUser.password) {
-      print('Login bem-sucedido: ${fixedUser.username}');
+  Future<void> _login(BuildContext context) async {
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DogsListScreen()),
-      );
-    } else {
-
+    if (email.isEmpty || password.isEmpty) {
       setState(() {
-        _errorMessage = "Credenciais inválidas. Tente novamente.";
+        _errorMessage = "Por favor, preencha todos os campos.";
       });
-      print('Credenciais inválidas');
+      return;
+    }
+
+    final Uri url =
+        Uri.parse("https://pet-adopt-dq32j.ondigitalocean.app/user/login");
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": email,
+          "password": password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['token'] != null) {
+          // Armazenar o token nas SharedPreferences
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_token', responseData['token']);
+
+          setState(() {
+            _authToken = responseData['token'];
+            _errorMessage = "";
+          });
+
+          print('Token armazenado: $_authToken');
+
+          // Navegar para a próxima tela
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DogsListScreen()),
+          );
+        } else {
+          setState(() {
+            _errorMessage = "Login falhou. Tente novamente.";
+          });
+        }
+      } else {
+        setState(() {
+          _errorMessage = "Erro ao fazer login. Código: ${response.statusCode}";
+        });
+      }
+    } catch (error) {
+      setState(() {
+        _errorMessage = "Ocorreu um erro. Verifique sua conexão.";
+      });
+      print('Erro: $error');
     }
   }
- 
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -93,7 +125,6 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
               SizedBox(height: 8),
-              
               SizedBox(height: size.height * 0.02),
               TextField(
                 controller: _emailController,

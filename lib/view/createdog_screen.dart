@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert'; // Para codificar os dados
+import 'package:http/http.dart' as http; // Para fazer a requisição HTTP
+import 'package:shared_preferences/shared_preferences.dart'; // Para recuperar o token
 import 'package:projpet/view/doglist_screen.dart';
 
 void main() {
@@ -21,15 +24,63 @@ class CreatePetInformation extends StatefulWidget {
 }
 
 class _CreatePetInformationState extends State<CreatePetInformation> {
-  final TextEditingController speciesController = TextEditingController();
-  final TextEditingController breedController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-  bool isMale = true;
+  final TextEditingController colorController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController imagesController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> _createPet() async {
+    final String url = "https://pet-adopt-dq32j.ondigitalocean.app/pet/create";
+
+    // Recuperar o token armazenado
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('user_token');
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Token não encontrado. Faça login novamente.")),
+      );
+      return;
+    }
+
+    // Dados do corpo da requisição
+    final Map<String, dynamic> body = {
+      "name": nameController.text,
+      "color": colorController.text,
+      "weight": int.tryParse(weightController.text) ?? 0,
+      "age": int.tryParse(ageController.text) ?? 0,
+      "images": imagesController.text.split(","),
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token", // Enviar o token na autorização
+        },
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Pet criado com sucesso!")),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DogsListScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Erro ao criar pet: ${response.body}")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $e")),
+      );
+    }
   }
 
   @override
@@ -44,10 +95,9 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DogsListScreen()),
-                        );
+              context,
+              MaterialPageRoute(builder: (context) => DogsListScreen()),
+            );
           },
         ),
       ),
@@ -57,7 +107,7 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
           children: [
             Center(
               child: Text(
-                'Adicionar Cachorro',
+                'Adicionar Pet',
                 style: TextStyle(
                   fontSize: size.width * 0.07,
                   fontWeight: FontWeight.bold,
@@ -66,45 +116,35 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
               ),
             ),
             SizedBox(height: 20),
-            buildTextField("Espécie:", speciesController),
-            SizedBox(height: 15),
-            buildTextField("Raça:", breedController),
-            SizedBox(height: 15),
             buildTextField("Nome:", nameController),
             SizedBox(height: 15),
-            buildDateField(context, "Idade:", dateController),
+            buildTextField("Cor:", colorController),
             SizedBox(height: 15),
-            Text(
-              "Genero:",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            ToggleButtons(
-              borderRadius: BorderRadius.circular(20),
-              isSelected: [isMale, !isMale],
-              onPressed: (int index) {
-                setState(() {
-                  isMale = index == 0;
-                });
-              },
-              children: [
-                Container(
-                  width: size.width * 0.4,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Center(child: Text("Masculino")),
-                ),
-                Container(
-                  width: size.width * 0.4,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Center(child: Text("Feminino")),
-                ),
-              ],
-              color: Colors.black,
-              selectedColor: Colors.white,
-              fillColor: Color(0xFF7E57C2),
-            ),
+            buildTextField("Peso (kg):", weightController),
+            SizedBox(height: 15),
+            buildTextField("Idade (meses):", ageController),
+            SizedBox(height: 15),
+            buildTextField(
+                "Imagens (URLs separadas por vírgula):", imagesController),
             SizedBox(height: 25),
-            
+            ElevatedButton(
+              onPressed: _createPet,
+              child: Text(
+                "Criar Pet",
+                style: TextStyle(
+                  fontSize: size.width * 0.04,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7E57C2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 15),
+              ),
+            ),
           ],
         ),
       ),
@@ -126,42 +166,6 @@ class _CreatePetInformationState extends State<CreatePetInformation> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildDateField(BuildContext context, String labelText, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          labelText,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          readOnly: true,
-          onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2101),
-            );
-            if (pickedDate != null) {
-              setState(() {
-                controller.text = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-              });
-            }
-          },
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            suffixIcon: Icon(Icons.calendar_today),
           ),
         ),
       ],

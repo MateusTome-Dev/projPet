@@ -14,21 +14,23 @@ class DogCard extends StatelessWidget {
     required this.backgroundColor,
   });
 
+  void navigateToDetails(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DogDetailPage(
+          dogName: dogName,
+          dogAge: dogAge,
+          imageUrl: imageUrl,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DogDetailPage(
-              dogName: dogName,
-              dogAge: dogAge,
-              imageUrl: imageUrl,
-            ),
-          ),
-        );
-      },
+      onTap: () => navigateToDetails(context),
       child: Container(
         decoration: BoxDecoration(
           color: backgroundColor,
@@ -37,9 +39,16 @@ class DogCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imageUrl,
-              height: 80,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                imageUrl,
+                height: 80,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.error, size: 80, color: Colors.red);
+                },
+              ),
             ),
             SizedBox(height: 8),
             Text(
