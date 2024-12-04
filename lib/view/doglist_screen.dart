@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:projpet/view/createdog_screen.dart';
+import 'package:projpet/view/dashboard_screen.dart';
 import 'package:projpet/view/user_profile_screen.dart';
 import 'package:projpet/view/dog_detail_page.dart';
 import 'package:projpet/widget/dog_card.dart'; // Import da página de detalhes
@@ -74,9 +75,12 @@ class _DogsListScreenState extends State<DogsListScreen> {
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
+          icon: Icon(Icons.exit_to_app),
+           onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DashboardScreen()),
+            );
           },
         ),
         actions: [
